@@ -209,6 +209,8 @@
 
     .footnote { margin-top: 18px; font-size: 11.5px; color: var(--muted); letter-spacing: 0.03em; }
     .footnote .chip { display: inline-block; border: 1px solid rgba(233,196,106,0.3); border-radius: 999px; padding: 2px 9px; color: var(--gold); font-weight: 600; margin-right: 6px; }
+    .privacy-link { display: inline-block; margin-top: 12px; font-size: 11.5px; color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+    .privacy-link:hover { color: var(--gold); }
 
     /* ---- lead form ---- */
     .lead-form { margin-top: 28px; display: grid; gap: 13px; text-align: left; }
@@ -302,6 +304,7 @@
     <a class="support-link" id="supportLink" href="#" target="_blank" rel="noopener noreferrer" data-i18n="support">Need help? Contact support</a>
 
     <p class="footnote" data-i18n-html="footnote"><span class="chip">18+</span> Play responsibly. For entertainment purposes only.</p>
+    <a class="privacy-link" href="privacy.html" target="_blank" rel="noopener noreferrer" data-i18n="privacy">Privacy Policy</a>
   </main>
 
   <!-- ============================================================
@@ -342,6 +345,7 @@
         formDone: "✓ Thanks! We'll be in touch.",
         support: "Need help? Contact support",
         footnote: '<span class="chip">18+</span> Play responsibly. For entertainment purposes only.',
+        privacy: "Privacy Policy",
         errEmpty: "Fill at least one field, or just tap a button above to join.",
         errFail: "Something went wrong. Please try again.",
         sending: "Sending…"
@@ -370,6 +374,7 @@
         formDone: "✓ 已收到！我们会尽快联系你。",
         support: "需要帮助？联系客服",
         footnote: '<span class="chip">18+</span> 理性游戏，仅供娱乐。',
+        privacy: "隐私政策",
         errEmpty: "请至少填写一项，或直接点上方按钮加入。",
         errFail: "出错了，请重试。",
         sending: "提交中…"
