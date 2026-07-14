@@ -398,7 +398,7 @@
       });
       var L = CONFIG.langs[lang] || CONFIG.langs.en;
       var tg = document.getElementById('tgLink'), wa = document.getElementById('waLink'), sp = document.getElementById('supportLink');
-      if (tg) tg.href = L.telegram;
+      if (tg) tg.href = botStartUrl(getParam('src') || 'organic');   // TG 走 bot（点击时再带 token）
       if (wa) wa.href = L.whatsapp;
       if (sp) sp.href = CONFIG.support;
       document.querySelectorAll('.lang-btn').forEach(function (b) {
@@ -432,10 +432,30 @@
       return m ? decodeURIComponent(m[1]) : '';
     }
 
-    ['tgLink', 'waLink'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.addEventListener('click', function () { if (window.fbq) fbq('track', 'Lead'); });
-    });
+    // ====== 做法2：TG 走 bot 深链，真进群由 bot 回传 CompleteRegistration ======
+    // ⚠️ 建好 bot 后，把 __BOT_USERNAME__ 换成你的 bot 用户名（不带 @）
+    var BOT_USERNAME = 'BOJ_invitebot';
+    var PIXEL_KEY = '001';   // A 页 = Pixel 001
+    function getParam(n) { try { return new URLSearchParams(location.search).get(n) || ''; } catch (e) { return ''; } }
+    function botStartUrl(p) { return 'https://t.me/' + BOT_USERNAME + '?start=' + encodeURIComponent(p); }
+    function goToBot(e) {
+      if (e) e.preventDefault();
+      if (window.fbq) fbq('track', 'Contact');   // 点击=Contact；真进群才是 CompleteRegistration（bot 回传）
+      var src = (getParam('src') || 'organic').slice(0, 64);
+      var token = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+                  : (Date.now().toString(16) + Math.random().toString(16).slice(2));
+      try {
+        var payload = JSON.stringify({ token: token, src: src, pixel: PIXEL_KEY, lang: curLang,
+          _fbp: readCookie('_fbp'), _fbc: readCookie('_fbc') });
+        if (navigator.sendBeacon) navigator.sendBeacon(LEAD_API + '/tg/mint', new Blob([payload], { type: 'application/json' }));
+        else fetch(LEAD_API + '/tg/mint', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true });
+      } catch (err) {}
+      window.location.href = botStartUrl(token);
+    }
+    var tgEl = document.getElementById('tgLink');
+    if (tgEl) tgEl.addEventListener('click', goToBot);
+    var waEl = document.getElementById('waLink');
+    if (waEl) waEl.addEventListener('click', function () { if (window.fbq) fbq('track', 'Contact'); });
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
